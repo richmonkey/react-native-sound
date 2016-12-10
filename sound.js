@@ -9,7 +9,7 @@ function isRelativePath(path) {
   return !/^\//.test(path);
 }
 
-function Sound(filename, basePath, onError) {
+function Sound(filename, basePath) {
   var asset = resolveAssetSource(filename);
   if (asset) {
     this._filename = asset.uri;
@@ -29,24 +29,28 @@ function Sound(filename, basePath, onError) {
   this._volume = 1;
   this._pan = 0;
   this._numberOfLoops = 0;
-  RNSound.prepare(this._filename, this._key, (error, props) => {
-    if (props) {
-      if (typeof props.duration === 'number') {
-        this._duration = props.duration;
-      }
-      if (typeof props.numberOfChannels === 'number') {
-        this._numberOfChannels = props.numberOfChannels;
-      }
-    }
-    if (error === null) {
-      this._loaded = true;
-    }
-    onError && onError(error);
-  });
 }
 
 Sound.prototype.isLoaded = function() {
   return this._loaded;
+};
+
+Sound.prototype.prepare = function(onError) {
+    RNSound.prepare(this._filename, this._key, this._numberOfLoops,
+                    (error, props) => {
+        if (props) {
+            if (typeof props.duration === 'number') {
+                this._duration = props.duration;
+            }
+            if (typeof props.numberOfChannels === 'number') {
+                this._numberOfChannels = props.numberOfChannels;
+            }
+        }
+        if (error === null) {
+            this._loaded = true;
+        }
+        onError && onError(error);
+    });    
 };
 
 Sound.prototype.play = function(onEnd) {

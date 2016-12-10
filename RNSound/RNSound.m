@@ -90,6 +90,7 @@ RCT_EXPORT_METHOD(enableInSilenceMode:(BOOL)enabled) {
 }
 
 RCT_EXPORT_METHOD(prepare:(NSString*)fileName withKey:(nonnull NSNumber*)key
+                  withLoop:(nonnull NSNumber*)loop
                   withCallback:(RCTResponseSenderBlock)callback) {
   NSError* error;
   AVAudioPlayer* player = [[AVAudioPlayer alloc]
@@ -97,6 +98,7 @@ RCT_EXPORT_METHOD(prepare:(NSString*)fileName withKey:(nonnull NSNumber*)key
                            error:&error];
   if (player) {
     player.delegate = self;
+    player.numberOfLoops = [loop intValue];
     [player prepareToPlay];
     [[self playerPool] setObject:player forKey:key];
     callback(@[[NSNull null], @{@"duration": @(player.duration),
