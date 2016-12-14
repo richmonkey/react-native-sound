@@ -36,7 +36,11 @@ Sound.prototype.isLoaded = function() {
 };
 
 Sound.prototype.prepare = function(onError) {
-    RNSound.prepare(this._filename, this._key, this._numberOfLoops,
+    var loop = this._numberOfLoops;
+    if (IsAndroid) {
+        loop = !!loop;
+    }
+    RNSound.prepare(this._filename, this._key, loop,
                     (error, props) => {
         if (props) {
             if (typeof props.duration === 'number') {
