@@ -1,5 +1,5 @@
 #import "RNSound.h"
-#import "RCTUtils.h"
+#import <React/RCTUtils.h>
 
 @implementation RNSound {
   NSMutableDictionary* _playerPool;
@@ -48,6 +48,12 @@
 }
 
 RCT_EXPORT_MODULE();
+
+
++(BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
 
 -(NSDictionary *)constantsToExport {
   return @{@"IsAndroid": [NSNumber numberWithBool:NO],
